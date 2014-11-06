@@ -1,0 +1,35 @@
+{
+  "name": "flood-pi-admin",
+  "version": "0.1.0",
+  "description": "RESTful administrative console for the flood-pi project ",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bustardcelly/flood-pi-admin"
+  },
+  "keywords": [
+    "flood",
+    "raspberry-pi"
+  ],
+  "author": "Todd Anderson",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/bustardcelly/flood-pi-admin/LICENSE-MIT"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/bustardcelly/flood-pi-admin/issues"
+  },
+  "homepage": "https://github.com/bustardcelly/flood-pi-admin",
+  "dependencies": {
+    "node-promise": "^0.5.10",
+    "restify": "^2.8.3",
+    "minimist": "^1.1.0",
+    "levelup": "^0.19.0",
+    "leveldown": "^0.10.2"
+  }
+}
