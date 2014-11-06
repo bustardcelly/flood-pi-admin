@@ -1,7 +1,7 @@
 {
   "name": "flood-pi-admin",
   "version": "0.1.0",
-  "description": "RESTful administrative console for the flood-pi project ",
+  "description": "RESTful administrative console for the flood-pi project",
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
