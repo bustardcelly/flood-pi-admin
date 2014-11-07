@@ -4,6 +4,7 @@
   "description": "RESTful administrative console for the flood-pi project",
   "main": "app/index.js",
   "scripts": {
+    "server": "node app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

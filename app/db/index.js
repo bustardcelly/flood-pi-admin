@@ -2,8 +2,12 @@
 var levelup = require('levelup');
 var defer = require('node-promise').defer;
 
+var levelFactory = require('../model/level_reading');
+
 var db;
 var LEVELS_KEY = 'levels';
+
+var levels = [];
 
 module.exports = {
   init: function(dbName) {
@@ -27,7 +31,7 @@ module.exports = {
   },
   inflate: function() {
     var dfd = defer();
-    db.get(LEVELS_KEY, function(err) {
+    db.get(LEVELS_KEY, function(err, data) {
       if(err && err.notFound) {
         db.put(LEVELS_KEY, [], function(err) {
           if(err) {
@@ -36,6 +40,9 @@ module.exports = {
           dfd.resolve(true);
         });
         console.log('Levels entry not found in DB: ' + JSON.stringify(err, null, 2));
+      }
+      else {
+        levels = data;
       }
     });
     return dfd.promise;
@@ -48,7 +55,25 @@ module.exports = {
         dfd.reject(err);
       }
       else {
+        levels = value;
         dfd.resolve(value);
+      }
+    });
+    return dfd.promise;
+  },
+  addLevelReading: function(level) {
+    var dfd = defer();
+    var newLevel = levelFactory.inflate(level);
+    levels.push(newLevel);
+
+    db.put(LEVELS_KEY, levels, function(err, data) {
+      if(err) {
+        console.error('Error in adding level to store: ' + JSON.stringify(newLevel, null, 2) + ', ' + JSON.stringify(err, null, 2));
+        levels.pop();
+        dfd.reject(err);
+      }
+      else {
+        dfd.resolve(data);
       }
     });
     return dfd.promise;

@@ -11,6 +11,7 @@ var DB_NAME = argsv.db || 'floodpi';
 
 var db = require('./db');
 var client = require('./client');
+var levelRouteController = require('./route/level-route-controller');
 
 var server = restify.createServer({
   version: version
@@ -19,27 +20,9 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
-server.get('/', function(req, res, next) {
-  db.getAllLevels()
-    .then(function(levelList) {
-      res.send(200, 'hello, world!\n' + JSON.stringify(levelList, null, 2));
-    }, function(error) {
-      res.send(200, {
-        error: error
-      });
-    });
-  return next();
-});
-
-server.get('/level', function(req, res, next) {
-  res.send(200, 'hello, level!');
-  next();
-});
-
-server.post('/level', function(req, res, next) {
-  res.send(200, true);
-  next();
-});
+server.get('/', levelRouteController.showAll);
+server.get('/level', levelRouteController.showAll);
+server.post('/level', levelRouteController.add);
 
 server.listen(PORT, function() {
   console.log('flood-pi-admin %s server started at %s.', version, server.url);
