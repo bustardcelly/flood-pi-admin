@@ -1,24 +1,21 @@
 'use strict';
 var db = require('../db');
-var util = require('./route-util');
 var session = require('../model/session');
 var configFactory = require('../model/configuration');
 
 module.exports = {
-  update: function(req, res, next) {
-    var d;
-    res.setHeader('Access-Control-Allow-Origin','*');
-    util.modifyContentType(req, res);
-
+  update: function(req, res) {
+    var result;
     // TODO: save config in db before setting on session.
     session.configuration = configFactory.inflate(req.params.delay, req.params.range);
-    d = {
-      result: true
+    result = {
+      ok: true
     };
-    if(util.isHTMLContentType(res)) {
-      d = JSON.stringify(d, null, 2);
+    if(req.is('json')) {
+      res.status(200).json(result);
     }
-    res.send(200, d);
-    return next();
+    else {
+      res.status(200).render('index', result);
+    }
   }
 };

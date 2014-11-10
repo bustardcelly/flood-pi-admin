@@ -1,13 +1,9 @@
 'use strict';
 var db = require('../db');
-var util = require('./route-util');
 var session = require('../model/session');
 
 module.exports = {
-  showCurrent: function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin','*');
-    util.modifyContentType(req, res);
-
+  showCurrent: function(req, res) {
     db.getAllLevels()
       .then(function(levelList) {
 
@@ -25,62 +21,59 @@ module.exports = {
           result.error = 'No reports found.';
         }
 
-        if(util.isHTMLContentType(res)) {
-          result = JSON.stringify(result, null, 2);
+        if(req.is('json')) {
+          res.status(200).json(result);
         }
-        res.send(200, 'poo');
+        else {
+          res.status(200).render('index', result);
+        }
 
       }, function(error) {
 
-        res.send(200, {
+        res.status(404).send({
           error: error
         });
 
       });
-    return next();
   },
-  showAll: function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin','*');
-    util.modifyContentType(req, res);
-
+  showAll: function(req, res) {
     db.getAllLevels()
       .then(function(levelList) {
 
-        var d = levelList;
-        if(util.isHTMLContentType(res)) {
-          d = JSON.stringify(levelList, null, 2);
+        var result = levelList;
+        if(req.is('json')) {
+          res.status(200).json(result);
         }
-        res.send(200, d);
+        else {
+          res.status(200).render('index', result);
+        }
 
       }, function(error) {
 
-        res.send(200, {
+        res.status(404).send({
           error: error
         });
 
       });
-    return next();
   },
-  add: function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin','*');
-    util.modifyContentType(req, res);
-
+  add: function(req, res) {
     db.addLevelReading(req.params.level)
       .then(function(data) {
 
-        var d = data || true;
-        if(util.isHTMLContentType(res)) {
-          d = JSON.stringify(data || {result:true}, null, 2);
+        var result = data || true;
+        if(req.is('json')) {
+          res.status(200).json(result);
         }
-        res.send(200, d);
+        else {
+          res.status(200).render('index', result);
+        }
 
       }, function(error) {
         
-        res.send(200, {
+        res.status(404).send({
           error: error
         });
 
       });
-    return next();
   }
 };

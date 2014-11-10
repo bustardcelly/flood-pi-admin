@@ -1,52 +1,53 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
-var restify = require('restify');
+var express = require('express');
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var consolidate = require('consolidate');
+var Handlebars = require('handlebars');
+
 var argsv = require('minimist')(process.argv.slice(2));
 var version = require(path.join(process.cwd(), 'package.json')).version;
 
 // Server configuration.
 var PORT = argsv.port || 8001;
-var CLIENT_PORT = argsv.clientport || 8002;
 var DB_NAME = argsv.db || 'floodpi';
 
 var db = require('./db');
-var client = require('./client');
 var levelRouteController = require('./route/level-route-controller');
 var configurationRouteController = require('./route/configuration-route-controller');
 
-var server = restify.createServer({
-  version: version,
-  formatters: {
-    'application/json': function(req, res, body) {
-      console.log('res JSON');
-      if(req.params.callback) {
-        var callbackFunctionName = req.params.callback.replace(/[^A-Za-z0-9_\.]/g, '');
-        return callbackFunctionName + "(" + JSON.stringify(body) + ");";
-      }
-      else {
-        return JSON.stringify(body);
-      }
-    },
-    'text/html': function(req, res, body) {
-      console.log('res HTML: ' + body);
-      return body;
-    }
-  }
+var app = express();
+app.set('port', PORT);
+
+app.engine('html', consolidate.handlebars);
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(morgan('dev'));
+app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', levelRouteController.showCurrent);
+app.get('/level', levelRouteController.showAll);
+app.post('/level', levelRouteController.add);
+app.post('/configuration', configurationRouteController.update);
+
+var partials = path.join(__dirname, 'views', 'partials');
+fs.readdirSync(partials).forEach(function (file) {
+    var source = fs.readFileSync(path.join(partials, file), 'utf8'),
+        partial = /(.+)\.html/.exec(file).pop();
+    Handlebars.registerPartial(partial, source);
 });
-server.use(restify.acceptParser(server.acceptable));
-server.use(restify.queryParser());
-server.use(restify.bodyParser());
 
-server.get('/', levelRouteController.showCurrent);
-server.get('/level', levelRouteController.showAll);
-server.post('/level', levelRouteController.add);
-server.post('/configuration', configurationRouteController.update);
-
-server.listen(PORT, function() {
-  console.log('flood-pi-admin %s server started at %s.', version, server.url);
+app.listen(PORT, function() {
+  console.log('flood-pi-admin %s server started at %s.', version, JSON.stringify(app, null, 2));
   db.init(DB_NAME)
     .then(db.inflate, function(err) {
       console.error(err);
     });
-  client.init(CLIENT_PORT);
 });
