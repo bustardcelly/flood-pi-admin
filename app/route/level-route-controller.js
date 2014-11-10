@@ -7,11 +7,18 @@ module.exports = {
     db.getAllLevels()
       .then(function(levelList) {
 
-        var result = {ok: false, error: undefined};
         var last = levelList.length > 0 ? levelList[levelList.length - 1] : undefined;
+        var result = {
+          isFlooded: false,
+          data: last,
+          error: undefined
+        };
+
         if(last !== undefined) {
-          if(typeof config !== 'undefined') {
-            result.ok = session.withinRange(last.level);
+          if(session.hasConfiguration()) {
+            console.log('Last level: ' + last.level);
+
+            result.isFlooded = session.withinRange(parseInt(last.level, 10));
           }
           else {
             result.error = 'Configuration not provided by client.';
@@ -40,7 +47,9 @@ module.exports = {
     db.getAllLevels()
       .then(function(levelList) {
 
-        var result = {items: levelList};
+        var result = {
+          items:levelList
+        };
         if(req.is('json')) {
           res.status(200).json(result);
         }
@@ -57,16 +66,11 @@ module.exports = {
       });
   },
   add: function(req, res) {
-    db.addLevelReading(req.params.level)
+    db.addLevelReading(req.query.level)
       .then(function(data) {
 
-        var result = data || true;
-        if(req.is('json')) {
-          res.status(200).json(result);
-        }
-        else {
-          res.status(200).render('index', result);
-        }
+        var result = data || {ok: true};
+        res.status(200).json(result);
 
       }, function(error) {
         

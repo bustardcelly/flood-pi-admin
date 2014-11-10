@@ -16,6 +16,7 @@ var PORT = argsv.port || 8001;
 var DB_NAME = argsv.db || 'floodpi';
 
 var db = require('./db');
+var session = require('./model/session');
 var levelRouteController = require('./route/level-route-controller');
 var configurationRouteController = require('./route/configuration-route-controller');
 
@@ -57,10 +58,22 @@ fs.readdirSync(partials).forEach(function (file) {
     }
 });
 
+Handlebars.registerHelper('json', function(obj) {
+  return new Handlebars.SafeString(JSON.stringify(obj));
+});
+
 app.listen(PORT, function() {
   console.log('flood-pi-admin %s server started at %s.', version, JSON.stringify(app, null, 2));
   db.init(DB_NAME)
-    .then(db.inflate, function(err) {
+    .then(function() {
+      db.inflate()
+        .then(function() {
+          db.getConfiguration()
+            .then(function(data) {
+              session.init(data);
+            });
+        });
+    }, function(err) {
       console.error(err);
     });
 });

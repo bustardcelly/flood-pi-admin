@@ -2,9 +2,10 @@
 <p>Could Not Determine Result</p>
 <h2>{{error}}</h2>
 {{else}}
-  {{#if ok}}
-  <h1>NO</h1>
-  {{else}}
+  {{#if isFlooded}}
   <h1>YES</h1>
+  {{else}}
+  <h1>NO</h1>
   {{/if}}
+  <p>Last reading: {{data.formattedTime}}</p>
 {{/if}}

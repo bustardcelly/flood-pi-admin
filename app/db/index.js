@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('lodash');
 var levelup = require('levelup');
 var defer = require('node-promise').defer;
 
@@ -44,11 +45,9 @@ module.exports = {
       }
       else {
         levels = data;
+        dfd.resolve(true);
       }
     });
-    // TODO: Access configuration if present
-    // TODO:  if not, foregt about it - not posted by client yet.
-    // TODO:  else, set configuration on session.
     return dfd.promise;
   },
   getAllLevels: function() {
@@ -59,7 +58,10 @@ module.exports = {
         dfd.reject(err);
       }
       else {
-        levels = value;
+        levels = _.map(value, function(item) {
+          item.formattedTime = new Date(item.time);
+          return item;
+        });
         dfd.resolve(value);
       }
     });
@@ -82,11 +84,29 @@ module.exports = {
     });
     return dfd.promise;
   },
+  getConfiguration: function() {
+    var dfd = defer();
+    db.get(CONFIG_KEY, function(err, data) {
+      if(err) {
+        console.error('Error in accessing configuration: ' + JSON.stringify(err, null, 2));
+        dfd.reject(err);
+      }
+      else {
+        dfd.resolve(data);
+      }
+    });
+    return dfd.promise;
+  },
   saveConfiguration: function(configuration) {
     var dfd = defer();
-    // TODO: save config in db.
     db.put(CONFIG_KEY, configuration, function(err, data) {
-
+      if(err) {
+        console.error('Error in saving configuration: ' + JSON.stringify(configuration, null, 2) + ', ' + JSON.stringify(err, null, 2));
+        dfd.reject(err);
+      }
+      else {
+        dfd.resolve(data);
+      }
     });
     return dfd.promise;
   }
