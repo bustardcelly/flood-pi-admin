@@ -35,7 +35,7 @@
     "body-parser": "^1.9.2",
     "morgan": "^1.5.0",
     "method-override": "^2.3.0",
-    "consolidate": "^0.10.0",
-    "handlebars": "^2.0.0"
+    "handlebars": "^2.0.0",
+    "express-handlebars": "^1.1.0"
   }
 }

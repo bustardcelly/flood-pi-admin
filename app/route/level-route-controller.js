@@ -25,7 +25,7 @@ module.exports = {
           res.status(200).json(result);
         }
         else {
-          res.status(200).render('index', result);
+          res.status(200).render('isitflooded', result);
         }
 
       }, function(error) {
@@ -40,12 +40,12 @@ module.exports = {
     db.getAllLevels()
       .then(function(levelList) {
 
-        var result = levelList;
+        var result = {items: levelList};
         if(req.is('json')) {
           res.status(200).json(result);
         }
         else {
-          res.status(200).render('index', result);
+          res.status(200).render('level-listing', result);
         }
 
       }, function(error) {
