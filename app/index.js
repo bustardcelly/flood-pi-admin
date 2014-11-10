@@ -12,11 +12,13 @@ var DB_NAME = argsv.db || 'floodpi';
 var db = require('./db');
 var client = require('./client');
 var levelRouteController = require('./route/level-route-controller');
+var configurationRouteController = require('./route/configuration-route-controller');
 
 var server = restify.createServer({
   version: version,
   formatters: {
     'application/json': function(req, res, body) {
+      console.log('res JSON');
       if(req.params.callback) {
         var callbackFunctionName = req.params.callback.replace(/[^A-Za-z0-9_\.]/g, '');
         return callbackFunctionName + "(" + JSON.stringify(body) + ");";
@@ -26,6 +28,7 @@ var server = restify.createServer({
       }
     },
     'text/html': function(req, res, body) {
+      console.log('res HTML: ' + body);
       return body;
     }
   }
@@ -34,9 +37,10 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
-server.get('/', levelRouteController.showAll);
+server.get('/', levelRouteController.showCurrent);
 server.get('/level', levelRouteController.showAll);
 server.post('/level', levelRouteController.add);
+server.post('/configuration', configurationRouteController.update);
 
 server.listen(PORT, function() {
   console.log('flood-pi-admin %s server started at %s.', version, server.url);

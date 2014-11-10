@@ -2,10 +2,11 @@
 var levelup = require('levelup');
 var defer = require('node-promise').defer;
 
-var levelFactory = require('../model/level_reading');
+var levelFactory = require('../model/level-reading');
 
 var db;
 var LEVELS_KEY = 'levels';
+var CONFIG_KEY = 'configuration';
 
 var levels = [];
 
@@ -45,6 +46,9 @@ module.exports = {
         levels = data;
       }
     });
+    // TODO: Access configuration if present
+    // TODO:  if not, foregt about it - not posted by client yet.
+    // TODO:  else, set configuration on session.
     return dfd.promise;
   },
   getAllLevels: function() {
@@ -75,6 +79,14 @@ module.exports = {
       else {
         dfd.resolve(data);
       }
+    });
+    return dfd.promise;
+  },
+  saveConfiguration: function(configuration) {
+    var dfd = defer();
+    // TODO: save config in db.
+    db.put(CONFIG_KEY, configuration, function(err, data) {
+
     });
     return dfd.promise;
   }
