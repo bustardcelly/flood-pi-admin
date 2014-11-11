@@ -43,8 +43,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', levelRouteController.showCurrent);
 app.get('/isitflooded', levelRouteController.showCurrent);
+app.get('/', levelRouteController.showAll);
 app.get('/level', levelRouteController.showAll);
 app.post('/level', levelRouteController.add);
 app.post('/configuration', configurationRouteController.update);
