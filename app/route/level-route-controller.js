@@ -67,7 +67,7 @@ module.exports = {
       });
   },
   add: function(req, res) {
-    db.addLevelReading(req.query.level)
+    db.addLevelReading(req.param('level'))
       .then(function(data) {
 
         var result = data || {ok: true};
