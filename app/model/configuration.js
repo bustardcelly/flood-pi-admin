@@ -4,6 +4,9 @@ var configuration = {
   // delay assigned is in minutes.
   delayInSeconds: function() {
     return this.delay * 60;
+  },
+  delayInMilliseconds: function() {
+    return this.delayInSeconds() * 1000;
   }
 };
 
