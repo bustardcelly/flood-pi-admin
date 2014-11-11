@@ -6,7 +6,7 @@ module.exports = {
     this.updateConfiguration(configuration);
   },
   isOverDelay: function(value) {
-    return (new Date().getTime() - value) > this.configuration.delay;
+    return (new Date().getTime() - value) > this.configuration.delayInSeconds();
   },
   withinRange: function(value) {
     return value >= this.configuration.minimumRange && value <= this.configuration.maximumRange;

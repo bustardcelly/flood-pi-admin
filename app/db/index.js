@@ -4,6 +4,7 @@ var levelup = require('levelup');
 var defer = require('node-promise').defer;
 
 var levelFactory = require('../model/level-reading');
+var configFactory = require('../model/configuration');
 
 var db;
 var LEVELS_KEY = 'levels';
@@ -92,7 +93,7 @@ module.exports = {
         dfd.reject(err);
       }
       else {
-        dfd.resolve(data);
+        dfd.resolve(configFactory.inflate(data.delay, {minimum:data.minimumRange, maximum:data.maximumRange}));
       }
     });
     return dfd.promise;
