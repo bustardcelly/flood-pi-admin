@@ -3,9 +3,18 @@
 <h2>{{error}}</h2>
 {{else}}
   {{#if isFlooded}}
-  <h1>YES</h1>
+  <h1 class="isitflooded">YES</h1>
   {{else}}
-  <h1>NO</h1>
+  <h1 class="isitflooded">NO</h1>
   {{/if}}
-  <p>Last reading: {{data.formattedTime}}</p>
 {{/if}}
+<div class="isitflooded-last-reading">
+  <p>
+    <span class="last-reading-static">Last reading:</span>&nbsp;&nbsp;<span class="last-reading-date">{{data.formattedTime}}</span>
+  </p>
+  {{#if overdelay}}
+    <p class="last-reading-over-delay"><span class="last-reading-warning">WARNING:</span>&nbsp;&nbsp;<span>{{datefrom data.time}}</span></p>
+  {{else}}
+    <p>{{datefrom data.time}}</p>
+  {{/if}}
+</div>

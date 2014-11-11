@@ -1,0 +1,55 @@
+body {
+  font-family: sans-serif, Helvetica, Arial;
+  font-size: 16px;
+}
+
+.isitflooded {
+  margin-top: 3rem;
+  font-size: 10rem;
+  text-align: center;
+}
+
+.isitflooded-last-reading {
+  /*text-align: center;*/
+  background-color: #F2F2F2;
+  position: absolute;
+  bottom: 2rem;
+  width: 100%;
+}
+
+.isitflooded-last-reading > p {
+  padding: 0.5rem;
+}
+
+.last-reading-static {
+  font-style: italic;
+}
+
+.last-reading-date {
+  font-weight: bold;
+}
+
+.last-reading-warning {
+  font-size: 1.4rem;
+}
+
+.last-reading-over-delay {
+  font-size: 1rem;
+  color: #fff;
+  background-color: rgb(245, 47, 47);
+}
+
+footer {
+  padding: 0.5rem 0;
+  background-color: #646464;
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: center;
+  position: absolute;
+  bottom: 0rem;
+  width: 100%;
+}
+
+footer > a {
+  color: #fff;
+}

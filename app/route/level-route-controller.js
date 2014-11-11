@@ -11,6 +11,7 @@ module.exports = {
         var result = {
           isFlooded: false,
           data: last,
+          overdelay: session.isOverDelay(last.time),
           error: undefined
         };
 

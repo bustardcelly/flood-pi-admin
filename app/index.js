@@ -62,18 +62,26 @@ Handlebars.registerHelper('json', function(obj) {
   return new Handlebars.SafeString(JSON.stringify(obj));
 });
 
+var timespan = require('timespan');
+Handlebars.registerHelper('datefrom', function(time) {
+  var ts = timespan.fromDates(new Date(time), new Date());
+  return ts.days + ' days ' +
+          ts.hours + ' hours ' +
+          ts.minutes + ' minutes ' +
+          ts.seconds + ' seconds ' +
+          'ago';
+});
+
 app.listen(PORT, function() {
-  console.log('flood-pi-admin %s server started at %s.', version, JSON.stringify(app, null, 2));
+  console.log('flood-pi-admin %s server started on %s.', version, app.get('port'));
   db.init(DB_NAME)
-    .then(function() {
-      db.inflate()
-        .then(function() {
-          db.getConfiguration()
-            .then(function(data) {
-              session.init(data);
-            });
-        });
-    }, function(err) {
-      console.error(err);
+    .then(db.inflate, function(err) {
+      console.error('Could not inflate db: ' + err);
+    })
+    .then(db.getConfiguration, function(err) {
+      console.error('Could not access already stored configuration: ' + err);
+    })
+    .then(session.init.bind(session), function(err) {
+      console.error('Could not init session with stored configuration: ' + err);
     });
 });
