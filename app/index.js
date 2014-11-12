@@ -8,6 +8,8 @@ var methodOverride = require('method-override');
 var Handlebars = require('handlebars');
 var expressHbs = require('express-handlebars');
 
+var levelup = require('levelup');
+
 var argsv = require('minimist')(process.argv.slice(2));
 var version = require(path.join(process.cwd(), 'package.json')).version;
 
@@ -74,14 +76,29 @@ Handlebars.registerHelper('datefrom', function(time) {
 
 app.listen(PORT, function() {
   console.log('flood-pi-admin %s server started on %s.', version, app.get('port'));
-  db.init(DB_NAME)
-    .then(db.inflate, function(err) {
-      console.error('Could not inflate db: ' + err);
-    })
-    .then(db.getConfiguration, function(err) {
-      console.error('Could not access already stored configuration: ' + err);
-    })
-    .then(session.init.bind(session), function(err) {
-      console.error('Could not init session with stored configuration: ' + err);
-    });
+  var levelUpDB;
+  var generateDBError = function(msg) {
+      return 'Error in establishing DB with name ' + DB_NAME + ': ' + msg;
+    };
+
+  levelUpDB = levelup(DB_NAME, {
+    valueEncoding: 'json'
+  }, function(err) {
+    if(err) {
+      console.error(generateDBError(JSON.stringify(err, null, 2)));
+      process.exit();
+    }
+    else {
+    db.init(levelUpDB)
+      .then(db.inflate, function(err) {
+        console.error('Could not inflate db: ' + err);
+      })
+      .then(db.getConfiguration, function(err) {
+        console.error('Could not access already stored configuration: ' + err);
+      })
+      .then(session.init.bind(session), function(err) {
+        console.error('Could not init session with stored configuration: ' + err);
+      });
+    }
+  });
 });

@@ -1,7 +1,14 @@
 'use strict';
 
+var levelReading = {
+  formattedTime: undefined,
+  formatTime: function() {
+    this.formattedTime =  new Date(this.time);
+  }
+};
+
 var generate = function(level, time, writable) {
-  return Object.create(Object.prototype, {
+  return Object.create(levelReading, {
             level: {
               value: level,
               writable: writable,

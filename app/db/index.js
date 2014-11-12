@@ -1,40 +1,42 @@
 'use strict';
 var _ = require('lodash');
-var levelup = require('levelup');
 var defer = require('node-promise').defer;
 
+var RangeEnum = require('../enum/level-time-range');
 var levelFactory = require('../model/level-reading');
 var configFactory = require('../model/configuration');
+var timeUtil = require('../util/time');
 
-var db;
 var LEVELS_KEY = 'levels';
 var CONFIG_KEY = 'configuration';
 
-var levels = [];
+var getLevelRangeMap = function(rangeEnum) {
+  return function(levels) {
+    switch(rangeEnum) {
+      case RangeEnum.DAY:
+          return levels.filter(function(item) {
+            return timeUtil.withinDay(item.time);
+          });
+        break;
+      default:
+        return levels;
+    }
+    return undefined;
+  };
+};
 
 module.exports = {
-  init: function(dbName) {
+  db: undefined,
+  init: function(db) {
     var dfd = defer();
-    var generateDBError = function(msg) {
-      return 'Error in establishing DB with name ' + dbName + ': ' + msg;
-    };
-
-    db = levelup(dbName, {
-      valueEncoding: 'json'
-    }, function(err) {
-     if(err) {
-      dfd.reject(generateDBError(JSON.stringify(err, null, 2)));
-     }
-     else {
-      dfd.resolve(true);
-     }
-    });
-
+    this.db = db;
+    dfd.resolve(true);
     return dfd.promise;
   },
   inflate: function() {
+    var db = this.db;
     var dfd = defer();
-    db.get(LEVELS_KEY, function(err, data) {
+    db.get(LEVELS_KEY, function(err) {
       if(err && err.notFound) {
         db.put(LEVELS_KEY, [], function(err) {
           if(err) {
@@ -44,48 +46,66 @@ module.exports = {
         });
         console.log('Levels entry not found in DB: ' + JSON.stringify(err, null, 2));
       }
-      else {
-        levels = data;
-        dfd.resolve(true);
-      }
     });
     return dfd.promise;
   },
   getAllLevels: function() {
+    var db = this.db;
     var dfd = defer();
-    db.get(LEVELS_KEY, function(err, value) {
+    db.get(LEVELS_KEY, function(err, levels) {
       if(err) {
         console.error('Error in access of levels: ' + JSON.stringify(err, null, 2));
         dfd.reject(err);
       }
       else {
-        levels = _.map(value, function(item) {
-          item.formattedTime = new Date(item.time);
-          return item;
+        levels = _.map(levels, function(item) {
+          return levelFactory.inflate(item).formatTime();
         });
-        dfd.resolve(value);
+        dfd.resolve(levels);
+      }
+    });
+    return dfd.promise;
+  },
+  getLevelsInRange: function(rangeEnum) {
+    var db = this.db;
+    var dfd = defer();
+    var map = getLevelRangeMap(rangeEnum);
+    db.get(LEVELS_KEY, function(err, levels) {
+      if(err) {
+        console.error('Error in access levels in range ' + rangeEnum + ': ' + JSON.stringify(err, null, 2));
+        dfd.reject(err);
+      }
+      else {
+        dfd.resolve(map(levels));
       }
     });
     return dfd.promise;
   },
   addLevelReading: function(level) {
+    var db = this.db;
     var dfd = defer();
     var newLevel = levelFactory.inflate(level);
-    levels.push(newLevel);
-
-    db.put(LEVELS_KEY, levels, function(err, data) {
+    db.get(LEVELS_KEY, function(err, levels) {
       if(err) {
         console.error('Error in adding level to store: ' + JSON.stringify(newLevel, null, 2) + ', ' + JSON.stringify(err, null, 2));
-        levels.pop();
         dfd.reject(err);
+        return;
       }
-      else {
-        dfd.resolve(data);
-      }
+
+      db.put(LEVELS_KEY, levels, function(err, data) {
+        if(err) {
+          console.error('Error in adding level to store: ' + JSON.stringify(newLevel, null, 2) + ', ' + JSON.stringify(err, null, 2));
+          dfd.reject(err);
+        }
+        else {
+          dfd.resolve(data);
+        }
+      });
     });
     return dfd.promise;
   },
   getConfiguration: function() {
+    var db = this.db;
     var dfd = defer();
     db.get(CONFIG_KEY, function(err, data) {
       if(err) {
@@ -99,6 +119,7 @@ module.exports = {
     return dfd.promise;
   },
   saveConfiguration: function(configuration) {
+    var db = this.db;
     var dfd = defer();
     db.put(CONFIG_KEY, configuration, function(err, data) {
       if(err) {
