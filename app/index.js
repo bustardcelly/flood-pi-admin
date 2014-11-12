@@ -61,7 +61,7 @@ fs.readdirSync(partials).forEach(function (file) {
 });
 
 Handlebars.registerHelper('json', function(obj) {
-  return new Handlebars.SafeString(JSON.stringify(obj));
+  return new Handlebars.SafeString(encodeURIComponent(JSON.stringify(obj)));
 });
 
 var timespan = require('timespan');

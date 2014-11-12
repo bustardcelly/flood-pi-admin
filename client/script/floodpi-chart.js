@@ -7,7 +7,7 @@ var host = '@serviceHost';
 var port = '@servicePort';
 var select = dom('#range-select')[0];
 var container = dom('#time-chart')[0];
-var data = JSON.parse(container.dataset.reading);
+var data = JSON.parse(decodeURIComponent(container.dataset.reading));
 var timeline = function(d) {
   return d.map(function(item) {
     return [item.time, item.level];
