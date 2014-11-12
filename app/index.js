@@ -47,7 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/isitflooded', levelRouteController.showCurrent);
 app.get('/', levelRouteController.showAll);
-app.get('/level', levelRouteController.showAll);
+app.get('/level', levelRouteController.showRange);
 app.post('/level', levelRouteController.add);
 app.post('/configuration', configurationRouteController.update);
 
@@ -90,10 +90,10 @@ app.listen(PORT, function() {
     }
     else {
     db.init(levelUpDB)
-      .then(db.inflate, function(err) {
+      .then(db.inflate.bind(db), function(err) {
         console.error('Could not inflate db: ' + err);
       })
-      .then(db.getConfiguration, function(err) {
+      .then(db.getConfiguration.bind(db), function(err) {
         console.error('Could not access already stored configuration: ' + err);
       })
       .then(session.init.bind(session), function(err) {

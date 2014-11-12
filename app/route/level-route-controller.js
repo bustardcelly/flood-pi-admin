@@ -2,6 +2,10 @@
 var db = require('../db');
 var session = require('../model/session');
 
+var isJSONRequest = function(req) {
+  return req.is('json') || req.get('Content-type') === 'application/json';
+};
+
 module.exports = {
   showCurrent: function(req, res) {
     db.getAllLevels()
@@ -29,7 +33,7 @@ module.exports = {
           result.error = 'No reports found.';
         }
 
-        if(req.is('json')) {
+        if(isJSONRequest(req)) {
           res.status(200).json(result);
         }
         else {
@@ -51,7 +55,29 @@ module.exports = {
         var result = {
           items:levelList
         };
-        if(req.is('json')) {
+        if(isJSONRequest(req)) {
+          res.status(200).json(result);
+        }
+        else {
+          res.status(200).render('level-listing', result);
+        }
+
+      }, function(error) {
+
+        res.status(404).send({
+          error: error
+        });
+
+      });
+  },
+  showRange: function(req, res) {
+    db.getLevelsInRange(req.param('range'))
+      .then(function(levelList) {
+
+        var result = {
+          items:levelList
+        };
+        if(isJSONRequest(req)) {
           res.status(200).json(result);
         }
         else {

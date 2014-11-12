@@ -76,6 +76,9 @@ module.exports = {
         dfd.reject(err);
       }
       else {
+        levels = _.map(levels, function(item) {
+          return levelFactory.inflate(item).formatTime();
+        });
         dfd.resolve(map(levels));
       }
     });

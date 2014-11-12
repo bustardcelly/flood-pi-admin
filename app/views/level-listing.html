@@ -1,8 +1,19 @@
+<div class="chart-controls">
+  <select id="range-select">
+    <option selected value="day">Day</option>
+    <option value="week">Week</option>
+    <option value="year">Year</option>
+    <option value="all">All</option>
+  </select>
+</div>
+<div data-reading="{{json items}}" id="time-chart"></div>
 <ul>
 {{#each items}}
   <li data-reading="{{json this}}">{{level}} - {{formattedTime}}
 {{/each}}
 </ul>
-<p>
+<p class="isitflooded-link">
   <a href="/isitflooded">is it currently flooded?</a>
 </p>
+<script src="lib/flotr2.min.js"></script>
+<script src="script/floodpi-chart.js"></script>
