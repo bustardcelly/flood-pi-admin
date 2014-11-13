@@ -95,6 +95,7 @@ module.exports = {
         return;
       }
 
+      levels.push(newLevel);
       db.put(LEVELS_KEY, levels, function(err, data) {
         if(err) {
           console.error('Error in adding level to store: ' + JSON.stringify(newLevel, null, 2) + ', ' + JSON.stringify(err, null, 2));
