@@ -42,7 +42,7 @@ body {
 }
 
 .isitflooded-link {
-  padding: 2rem;
+  padding: 2rem 0 3rem 0;
   text-align: center;
 }
 
@@ -52,6 +52,14 @@ body {
   max-width: 600px;
   margin: 2rem auto;
   text-align: right;
+}
+
+.warning-band {
+  width: 100%;
+  height: 200px;
+  text-align: center;
+  background-color: rgb(181, 7, 7);
+  opacity: 0.3;
 }
 
 #time-chart {

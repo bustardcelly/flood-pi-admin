@@ -44,14 +44,24 @@ var options = {
   HtmlText: true,
   shadowSize: 0
 };
+
+var drawWarningBand = function() {
+  var b = document.createElement('div');
+  b.classList.add('warning-band');
+  var t = document.createTextNode('hello,world');
+  b.appendChild(t);
+  container.appendChild(b);
+};
+
 var inflateChart = debounce(300, function(d) {
   var o = Flotr._.extend(Flotr._.clone(options), {});
   data = d;
-  return Flotr.draw(
+  Flotr.draw(
     container,
     [d],
     o
   );
+  drawWarningBand();
 });
 
 var getNewRange = function(value) {
