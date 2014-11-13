@@ -14,8 +14,21 @@ var argsv = require('minimist')(process.argv.slice(2));
 var version = require(path.join(process.cwd(), 'package.json')).version;
 
 // Server configuration.
-var PORT = argsv.port || 8001;
-var DB_NAME = argsv.db || 'floodpi';
+var config;
+var configFile = path.join(process.cwd(), 'config.json');
+var isProduction = process.env.NODE_ENV === 'production';
+if(!fs.existsSync(configFile)) {
+  config = {
+    port: 8001,
+    dbName: 'floodpi'
+  };
+}
+else {
+  config = require(configFile)[isProduction ? 'prod' : 'dev'];
+}
+
+var PORT = argsv.port || config.port;
+var DB_NAME = argsv.db || config.dbName;
 
 var db = require('./db');
 var session = require('./model/session');
