@@ -16,6 +16,9 @@ if(typeof configuration === 'undefined') {
     minimumRange: 0
   };
 }
+else {
+  config = JSON.parse(decodeURIComponent(config));
+}
 
 var debounce = function(delay, fn) {
   var timeout;
