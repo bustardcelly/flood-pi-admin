@@ -22,7 +22,7 @@ gulp.task('browserify', ['clean'], function() {
   p.pipe(replace(/@servicePort/, servicePort));
 
   if(isProduction) {
-    p.pipe(uglify);
+    p.pipe(uglify());
   }
   p.pipe(gulp.dest(path.join(destdir, 'script')));
 });

@@ -19,6 +19,9 @@ var options = {
     mode : 'time', 
     labelsAngle : 45
   },
+  grid: {
+    verticalLines: false,
+  },
   selection : {
     mode : 'x'
   },
