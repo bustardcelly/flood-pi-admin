@@ -17,14 +17,19 @@ var destdir = path.join(__dirname, 'app', 'public');
 gulp.task('browserify', ['clean'], function() {
   var p = gulp.src(path.join(srcdir, 'script', 'floodpi-chart.js'), {read:false})
               .pipe(gulpify());
+  var q = gulp.src(path.join(srcdir, 'script', 'floodpi-time-formatter.js'), {read:false})
+              .pipe(gulpify());
               
   p.pipe(replace(/@serviceHost/, serviceHost));
   p.pipe(replace(/@servicePort/, servicePort));
 
   if(isProduction) {
     p.pipe(uglify());
+    q.pipe(uglify());
   }
+
   p.pipe(gulp.dest(path.join(destdir, 'script')));
+  q.pipe(gulp.dest(path.join(destdir, 'script')));
 });
 
 gulp.task('copy', ['clean'], function() {
