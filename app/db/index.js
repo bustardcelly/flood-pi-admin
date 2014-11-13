@@ -12,16 +12,34 @@ var CONFIG_KEY = 'configuration';
 
 var getLevelRangeMap = function(rangeEnum) {
   return function(levels) {
+    var result = [];
+    var now = new Date().getTime();
     switch(rangeEnum) {
       case RangeEnum.DAY:
-          return levels.filter(function(item) {
+          result = levels.filter(function(item) {
             return timeUtil.withinDay(item.time);
           });
+          result.splice(0, 0, {level:NaN, time: timeUtil.dayAgo(now)});
+          result.push({level:NaN, time: now});
         break;
+      case RangeEnum.WEEK:
+          result = levels.filter(function(item) {
+            return timeUtil.withinWeek(item.time);
+          });
+          result.splice(0, 0, {level:NaN, time: timeUtil.weekAgo(now)});
+          result.push({level:NaN, time: now});
+        break;
+      case RangeEnum.YEAR:
+          result = levels.filter(function(item) {
+            return timeUtil.withinYear(item.time);
+          });
+          result.splice(0, 0, {level:NaN, time: timeUtil.yearAgo(now)});
+          result.push({level:NaN, time: now});
+          break;
       default:
         return levels;
     }
-    return undefined;
+    return result;
   };
 };
 

@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*global Flotr*/
+/*global window, Flotr*/
 var dom = require('dom');
 var xhr = require("json-xhr");
 var events = require('component-event');
@@ -9,10 +9,13 @@ var port = '8001';
 var select = dom('#range-select');
 var container = dom('#time-chart');
 
-var config = {
-  minimumRange: 300,
-  maximumRange: 500
-};
+var config = container[0].dataset.configuration;
+if(typeof configuration === 'undefined') {
+  config = {
+    maximumRange: 0,
+    minimumRange: 0
+  };
+}
 
 var debounce = function(delay, fn) {
   var timeout;
@@ -60,7 +63,7 @@ var drawWarningBand = function() {
   b.addClass('warning-band');
   b.css('height', (height * perc) + 'px');
   b.css('position', 'relative');
-  b.css('top', y + 'px')
+  b.css('top', y + 'px');
   container.append(b);
 };
 

@@ -1,4 +1,4 @@
-/*global Flotr*/
+/*global window, Flotr*/
 var dom = require('dom');
 var xhr = require("json-xhr");
 var events = require('component-event');
@@ -8,10 +8,13 @@ var port = '@servicePort';
 var select = dom('#range-select');
 var container = dom('#time-chart');
 
-var config = {
-  minimumRange: 300,
-  maximumRange: 500
-};
+var config = container[0].dataset.configuration;
+if(typeof configuration === 'undefined') {
+  config = {
+    maximumRange: 0,
+    minimumRange: 0
+  };
+}
 
 var debounce = function(delay, fn) {
   var timeout;
@@ -59,7 +62,7 @@ var drawWarningBand = function() {
   b.addClass('warning-band');
   b.css('height', (height * perc) + 'px');
   b.css('position', 'relative');
-  b.css('top', y + 'px')
+  b.css('top', y + 'px');
   container.append(b);
 };
 

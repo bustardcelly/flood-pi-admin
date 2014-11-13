@@ -2,6 +2,8 @@
 var db = require('../db');
 var session = require('../model/session');
 
+var RangeEnum = require('../enum/level-time-range');
+
 var isJSONRequest = function(req) {
   return req.is('json') || req.get('Content-type') === 'application/json';
 };
@@ -16,6 +18,7 @@ module.exports = {
           isFlooded: false,
           data: last,
           overdelay: (last !== undefined) && session.isOverDelay(last.time),
+          configuration: configuration,
           error: undefined
         };
 
@@ -53,7 +56,8 @@ module.exports = {
       .then(function(levelList) {
 
         var result = {
-          items:levelList
+          items:levelList,
+          configuration: session.configuration
         };
         if(isJSONRequest(req)) {
           res.status(200).json(result);
@@ -71,11 +75,14 @@ module.exports = {
       });
   },
   showRange: function(req, res) {
-    db.getLevelsInRange(req.param('range'))
+    var range = req.param('range');
+    range = range || RangeEnum.DAY;
+    db.getLevelsInRange(range)
       .then(function(levelList) {
 
         var result = {
-          items:levelList
+          items:levelList,
+          configuration: session.configuration
         };
         if(isJSONRequest(req)) {
           res.status(200).json(result);
