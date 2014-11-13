@@ -38,8 +38,7 @@ var options = {
   selection : {
     mode : 'x'
   },
-  HtmlText : false,
-  title : 'Time'
+  HtmlText : true
 };
 var inflateChart = debounce(300, function(d) {
   var o = Flotr._.extend(Flotr._.clone(options), {});
