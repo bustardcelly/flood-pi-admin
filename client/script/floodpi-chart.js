@@ -27,17 +27,22 @@ var timeline = function(d) {
 };
 
 var options = {
-  xaxis : {
-    mode : 'time', 
+  xaxis: {
+    mode: 'time', 
     labelsAngle : 45
+  },
+  yaxis: {
+    min: 0,
+    max: 1024
   },
   grid: {
     verticalLines: false,
   },
-  selection : {
-    mode : 'x'
+  selection: {
+    mode: 'x'
   },
-  HtmlText : true
+  HtmlText: true,
+  shadowSize: 0
 };
 var inflateChart = debounce(300, function(d) {
   var o = Flotr._.extend(Flotr._.clone(options), {});
