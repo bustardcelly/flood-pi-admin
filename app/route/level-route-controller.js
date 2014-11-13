@@ -18,7 +18,7 @@ module.exports = {
           isFlooded: false,
           data: last,
           overdelay: (last !== undefined) && session.isOverDelay(last.time),
-          configuration: configuration,
+          configuration: session.configuration,
           error: undefined
         };
 
