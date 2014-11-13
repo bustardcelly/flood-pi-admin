@@ -9,7 +9,7 @@ var port = '8001';
 var select = dom('#range-select');
 var container = dom('#time-chart');
 
-var config = container[0].dataset.configuration;
+var config = container[0].dataset.config;
 if(typeof configuration === 'undefined') {
   config = {
     maximumRange: 0,
