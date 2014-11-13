@@ -93,9 +93,11 @@ module.exports = {
       });
   },
   add: function(req, res) {
+    console.log('add: ' + req.param('level'));
     db.addLevelReading(req.param('level'))
       .then(function(data) {
 
+        console.log('added: ' + JSON.stringify(data, null, 2));
         var result = data || {ok: true};
         res.status(200).json(result);
 
