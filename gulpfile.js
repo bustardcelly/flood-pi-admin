@@ -1,4 +1,5 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
 var gulpify = require('gulp-browserify');
@@ -7,9 +8,24 @@ var uglify = require('gulp-uglify');
 var minifycss = require('gulp-minify-css');
 var del = require('del');
 
+require('colors')
+
+var config;
+var configFile = path.join(__dirname, 'config.json');
 var isProduction = process.env.NODE_ENV === 'production';
-var serviceHost = isProduction ? '54.173.112.166' : 'localhost';
-var servicePort = isProduction ? '8001' : '8001';
+if(!fs.existsSync(configFile)) {
+  console.log('A config.json file is required to proper assign server host and port settings for production and development deployments.\n'.white.inverse);
+  config = {
+    host: 'localhost',
+    port: 8001
+  };
+}
+else {
+  config = require(configFile)[isProduction ? 'prod' : 'dev'];
+}
+
+var serviceHost = config.host;
+var servicePort = config.port;
 
 var srcdir = path.join(__dirname, 'client');
 var destdir = path.join(__dirname, 'app', 'public');

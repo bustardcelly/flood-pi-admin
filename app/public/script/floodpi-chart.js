@@ -10,7 +10,7 @@ var select = dom('#range-select');
 var container = dom('#time-chart');
 
 var config = container[0].dataset.config;
-if(typeof configuration === 'undefined') {
+if(typeof config === 'undefined') {
   config = {
     maximumRange: 0,
     minimumRange: 0
