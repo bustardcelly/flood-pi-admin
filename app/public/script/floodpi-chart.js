@@ -1,13 +1,18 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/*global window, Flotr*/
+/*global Flotr*/
 var dom = require('dom');
 var xhr = require("json-xhr");
 var events = require('component-event');
 
 var host = 'localhost';
 var port = '8001';
-var select = dom('#range-select')[0];
-var container = dom('#time-chart')[0];
+var select = dom('#range-select');
+var container = dom('#time-chart');
+
+var config = {
+  minimumRange: 300,
+  maximumRange: 500
+};
 
 var debounce = function(delay, fn) {
   var timeout;
@@ -20,7 +25,7 @@ var debounce = function(delay, fn) {
   };
 };
 
-var data = JSON.parse(decodeURIComponent(container.dataset.reading));
+var data = JSON.parse(decodeURIComponent(container[0].dataset.reading));
 var timeline = function(d) {
   return d.map(function(item) {
     return [item.time, item.level];
@@ -47,18 +52,23 @@ var options = {
 };
 
 var drawWarningBand = function() {
-  var b = document.createElement('div');
-  b.classList.add('warning-band');
-  var t = document.createTextNode('hello,world');
-  b.appendChild(t);
-  container.appendChild(b);
+  var height = config.maximumRange - config.minimumRange;
+  var chartHeight = container.contentHeight() - 16;
+  var perc = chartHeight / 1024;
+  var y = (1024 - config.maximumRange) * perc;
+  var b = dom('<div>');
+  b.addClass('warning-band');
+  b.css('height', (height * perc) + 'px');
+  b.css('position', 'relative');
+  b.css('top', y + 'px')
+  container.append(b);
 };
 
 var inflateChart = debounce(300, function(d) {
   var o = Flotr._.extend(Flotr._.clone(options), {});
   data = d;
   Flotr.draw(
-    container,
+    container[0],
     [d],
     o
   );
@@ -76,7 +86,7 @@ var getNewRange = function(value) {
 
 inflateChart(timeline(data));
 
-events.bind(select, 'change', function(event) {
+select.on('change', function(event) {
   event.preventDefault();
   var selection = this.value;
   getNewRange(selection);
