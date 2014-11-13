@@ -46,6 +46,9 @@ module.exports = {
         });
         console.log('Levels entry not found in DB: ' + JSON.stringify(err, null, 2));
       }
+      else {
+        dfd.resolve(true);
+      }
     });
     return dfd.promise;
   },
