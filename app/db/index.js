@@ -59,7 +59,7 @@ module.exports = {
       }
       else {
         levels = _.map(levels, function(item) {
-          return levelFactory.inflate(item).formatTime();
+          return levelFactory.inflate(item.level, item.time).formatTime();
         });
         dfd.resolve(levels);
       }
