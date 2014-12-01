@@ -20,14 +20,14 @@ module.exports = {
   },
   withinDay: function(time) {
     var now = new Date().getTime();
-    return (now - time) <= (now - DAY);
+    return (now - time) <= DAY;
   },
   withinWeek: function(time) {
     var now = new Date().getTime();
-    return (now - time) <= (now - WEEK);
+    return (now - time) <= WEEK;
   },
   withinYear: function(time) {
     var now = new Date().getTime();
-    return (now - time) <= (now - YEAR);
+    return (now - time) <= YEAR;
   }
 };
