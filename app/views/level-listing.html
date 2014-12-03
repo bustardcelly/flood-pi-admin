@@ -1,10 +1,10 @@
 <div class="chart-controls">
   <p>Select Reading Range:&nbsp;
-    <select id="range-select">
-      <option selected value="day">Day</option>
-      <option value="week">Week</option>
-      <option value="year">Year</option>
-      <option value="all">All</option>
+    <select id="range-select" data-selection="{{selectedRange}}">
+      <option value="day" {{selectedRange selectedRange 'day'}}>Day</option>
+      <option value="week" {{selectedRange selectedRange 'week'}}>Week</option>
+      <option value="year" {{selectedRange selectedRange 'year'}}>Year</option>
+      <option value="all" {{selectedRange selectedRange 'all'}}>All</option>
     </select>
   </p>
 </div>

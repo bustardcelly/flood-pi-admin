@@ -3,7 +3,7 @@
 var levelReading = {
   formattedTime: undefined,
   formatTime: function() {
-    this.formattedTime =  new Date(this.time);
+    this.formattedTime =  new Date(this.time).toString();
     return this;
   }
 };

@@ -1,9 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var dom = require('dom');
 var items = dom('.last-reading-date');
+var REGEX = /(.*)( GMT.*)/g;
 
 items.forEach(function(item) {
-  item.innerHTML = new Date(item.innerHTML + ' UTC').toString();
+  var offset = (new Date().getTimezoneOffset() * (60 * 1000));
+  var str = new Date(parseInt(item.dataset.time, 10) - offset).toString();
+  item.innerHTML = REGEX.exec(str)[1];
 });
 },{"dom":2}],2:[function(require,module,exports){
 

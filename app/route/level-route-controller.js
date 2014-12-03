@@ -57,7 +57,8 @@ module.exports = {
 
         var result = {
           items:levelList,
-          configuration: session.configuration
+          configuration: session.configuration,
+          selectedRange: RangeEnum.ALL
         };
         if(isJSONRequest(req)) {
           res.status(200).json(result);
@@ -82,7 +83,8 @@ module.exports = {
 
         var result = {
           items:levelList,
-          configuration: session.configuration
+          configuration: session.configuration,
+          selectedRange: range
         };
         if(isJSONRequest(req)) {
           res.status(200).json(result);

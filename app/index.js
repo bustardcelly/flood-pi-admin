@@ -77,6 +77,14 @@ Handlebars.registerHelper('json', function(obj) {
   return new Handlebars.SafeString(encodeURIComponent(JSON.stringify(obj)));
 });
 
+Handlebars.registerHelper('selectedRange', function(value, option) {
+  console.log('selectedRange, ' + value + ', ' + option);
+  if(option === value) {
+    return ' selected';
+  }
+  return '';
+});
+
 var timespan = require('timespan');
 Handlebars.registerHelper('datefrom', function(time) {
   var ts = timespan.fromDates(new Date(time), new Date());
