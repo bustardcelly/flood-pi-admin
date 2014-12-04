@@ -8,6 +8,8 @@ Introduction
 ---
 The __flood-pi-admin__ is a NodeJS-based server that provides a RESTful API for POSTing and accessing flood level reading data posted by a [flood-pi](https://github.com/bustardcelly/flood-pi) detector. It provides routing to show charting of aggregate data based on time range, as well as an immediate response to whether or not there is a flood detected:
 
+![charts](https://raw.githubusercontent.com/bustardcelly/flood-pi-admin/master/images/flood_pi_chart.png)
+
 ![flood detected](https://raw.githubusercontent.com/bustardcelly/flood-pi-admin/master/images/detection_negative.png)
 
 Requirements
@@ -16,10 +18,10 @@ __flood-pi-admin__ requires [NodeJS](http://nodejs.org/).
 
 ### Installing NodeJS on Ubuntu
 ```
-sudo apt-get update
+$ sudo apt-get update
 
-curl -sL https://deb.nodesource.com/setup | sudo bash -
-sudo apt-get install -y nodejs
+$ curl -sL https://deb.nodesource.com/setup | sudo bash -
+$ sudo apt-get install -y nodejs
 ```
 
 Installation
@@ -96,3 +98,7 @@ POSTs level reading value.
 $ curl -X POST http://localhost:8001/configuration -H "Content-Type: application/json" -d '{"delay":15, "range": {"minimum": 300, "maximum": 500}}'
 ```
 POSTs configuration object used in displaying data.
+
+Additional Information
+---
+[http://custardbelly.com/blog/blog-posts/2014/12/4/flood-pi/index.html](http://custardbelly.com/blog/blog-posts/2014/12/4/flood-pi/index.html)
