@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "host": "localhost",
+    "port": 8001,
+    "dbName": "floodpi"
+  },
+  "prod": {
+    "host": "localhost",
+    "port": 8001,
+    "dbName": "floodpi"
+  }
+}
