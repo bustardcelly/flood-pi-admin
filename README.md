@@ -53,6 +53,7 @@ It is recommended to install [forever](https://github.com/nodejitsu/forever) glo
 
 ```
 $ npm install -g forever
+$ mkdir log
 $ npm run build-client-prod
 $ npm run daemon-start
 ```
@@ -60,6 +61,12 @@ $ npm run daemon-start
 API
 ---
 The following describes the API using cURL and assuming that the server is running on localhost at port 8001.
+
+### NEED TO KNOW
+```
+$ curl -X GET http://localhost:8001/isitflooded
+```
+Displays positive or negative result and last read statistics.
 
 ### GETting Data
 
