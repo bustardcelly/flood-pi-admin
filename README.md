@@ -8,13 +8,13 @@ Introduction
 ---
 The __flood-pi-admin__ is a NodeJS-based server that provides a RESTful API for POSTing and accessing flood level reading data posted by a [flood-pi](https://github.com/bustardcelly/flood-pi) detector. It provides routing to show charting of aggregate data based on time range, as well as an immediate response to whether or not there is a flood detected:
 
-![flood detected](https://github.com/bustardcelly/flood-pi-admin/images/detection_negative.png)
+![flood detected](https://raw.githubusercontent.com/bustardcelly/flood-pi-admin/master/images/detection_negative.png)
 
 Requirements
 ---
 __flood-pi-admin__ requires [NodeJS](http://nodejs.org/).
 
-## Installing NodeJS on Ubuntu
+### Installing NodeJS on Ubuntu
 ```
 sudo apt-get update
 
@@ -39,7 +39,7 @@ Running the server requires a __config.json__ file to be present at the root of 
 
 The _dev_ configuration is probably sufficient for local development and will deploy the server on localhost at port 8001. The _prod_ option should point to your production server host and port when deployed for production.
 
-## In Development
+### In Development
 
 ```
 $ npm run build-client
@@ -48,7 +48,7 @@ $ npm run server
 
 With the default options from __config.json__, open http://localhost:8001 and you should see a chart displaying the flood-level readings from a running [flood-pi](https://github.com/bustardcelly/flood-pi) detector if set up to report to the localhost server.
 
-## In Production
+### In Production
 It is recommended to install [forever](https://github.com/nodejitsu/forever) globally as there are npm script to start and stop the server as a daemon. Additionally, you should modify the _"prod"_ entry of the __config.json__ file to point to your production host and port that the __flood-pi-admin__ server will be run.
 
 ```
@@ -61,7 +61,7 @@ API
 ---
 The following describes the API using cURL and assuming that the server is running on localhost at port 8001.
 
-## GETting Data
+### GETting Data
 
 ```
 $ curl -X GET http://localhost:8001/
@@ -78,7 +78,7 @@ $ curl -X GET http://localhost:8001/level?range=(day|week|year|all)
 ```
 Shows results data on time range.
 
-## POSTing Data
+### POSTing Data
 
 ```
 $ curl -X POST http://localhost:8001/level -H "Content-Type: application/json" -d '{"level":324}'
